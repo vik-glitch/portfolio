@@ -1,0 +1,565 @@
+<!-- Save as index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Thiruvikraman V M — Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#03050a;
+    --card:#07101a;
+    --muted:#9fb0d0;
+    --accent1:#b91c1c;
+    --accent2:#1d4ed8;
+    --glass: rgba(255,255,255,0.03);
+    --glass-2: rgba(255,255,255,0.02);
+    --text:#f5f7fb;
+    --radius:18px;
+    --maxw:1200px;
+    --font: 'Space Grotesk', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--font);
+    color:var(--text);
+    background: var(--bg);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* Canvas fluid background sits behind everything */
+  #fluid-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    mix-blend-mode:screen;opacity:0.9;
+  }
+
+  /* Particle canvas */
+  #particles{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    opacity:0.9;
+  }
+
+  /* subtle grid overlay */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size:64px 64px;
+    z-index:1;
+    pointer-events:none;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+  }
+
+  .wrap{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:28px}
+  header{
+    display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:999px;border:1px solid rgba(255,255,255,0.04);
+    backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    position:sticky;top:18px;margin:18px 0;z-index:10;
+    transition:transform .28s ease, box-shadow .28s ease;
+  }
+  header:hover{transform:translateY(-3px);box-shadow:0 18px 50px rgba(0,0,0,0.6)}
+
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+  .mark{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:grid;place-items:center;font-weight:800;box-shadow:0 8px 30px rgba(29,78,216,0.18)}
+  nav{display:flex;gap:18px;align-items:center}
+  nav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;padding:8px;border-radius:10px;transition:all .22s}
+  nav a:hover{color:var(--text);transform:translateY(-3px)}
+  .cta{padding:10px 18px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;text-decoration:none;font-weight:700;box-shadow:0 10px 30px rgba(29,78,216,0.18)}
+
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:center;min-height:78vh;padding:28px 0}
+  .hero-left{padding:18px}
+  .kicker{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-size:13px;margin-bottom:18px}
+  .kicker .dot{width:8px;height:8px;border-radius:50%;background:var(--accent1);box-shadow:0 0 12px var(--accent1)}
+  h1{font-size:clamp(36px,7vw,72px);line-height:0.95;margin:6px 0;font-weight:800;letter-spacing:-0.02em}
+  h1 .accent{background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lead{color:var(--muted);max-width:60ch;font-size:16px;margin:18px 0 26px}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;text-decoration:none;font-weight:700;box-shadow:0 12px 40px rgba(29,78,216,0.18);transition:transform .28s}
+  .btn:hover{transform:translateY(-6px) scale(1.01)}
+  .ghost{padding:12px 16px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);text-decoration:none}
+
+  /* hero right card */
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:20px;padding:22px;border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(8px);transition:transform .28s, box-shadow .28s}
+  .card:hover{transform:translateY(-8px);box-shadow:0 40px 80px rgba(0,0,0,0.6)}
+  .role{font-size:13px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
+  .name{font-size:20px;font-weight:800;margin-bottom:6px}
+  .contact{display:flex;flex-direction:column;gap:8px;color:var(--muted);font-size:14px}
+  .contact a{color:var(--text);text-decoration:none}
+  .skills-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{padding:8px 12px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);font-weight:700;color:var(--muted);font-size:13px;transition:all .25s}
+  .chip:hover{transform:translateY(-6px);background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;box-shadow:0 18px 40px rgba(29,78,216,0.12)}
+
+  /* sections */
+  section{padding:64px 0;border-top:1px solid rgba(255,255,255,0.02)}
+  .section-head{display:flex;align-items:center;gap:18px;margin-bottom:28px}
+  .num{color:var(--accent2);font-weight:800;font-size:13px}
+  .title{font-size:clamp(28px,4vw,44px);font-weight:800}
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start}
+  .about p{color:var(--muted);font-size:16px}
+  .stats{display:flex;gap:12px;margin-top:18px}
+  .stat{background:var(--glass);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);min-width:120px;text-align:center}
+  .stat .numbig{font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;color:transparent}
+
+  /* projects */
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .card-plain{background:var(--glass-2);padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);transition:transform .28s, box-shadow .28s}
+  .card-plain:hover{transform:translateY(-10px) rotateX(2deg);box-shadow:0 40px 80px rgba(0,0,0,0.5)}
+  .project-media{height:160px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:800}
+
+  /* timeline */
+  .timeline{position:relative;padding-left:18px}
+  .timeline::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent2),var(--accent1))}
+  .event{position:relative;padding:18px 0 18px 28px}
+  .dot{position:absolute;left:-6px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:3px solid var(--accent2);box-shadow:0 0 18px rgba(29,78,216,0.18)}
+
+  /* marquee */
+  .marquee{overflow:hidden;white-space:nowrap;padding:28px 0}
+  .marquee-track{display:inline-flex;gap:56px;animation:marq 28s linear infinite}
+  @keyframes marq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 360px;gap:28px}
+  .email-large{font-size:20px;font-weight:800;color:var(--text)}
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+  .link{color:var(--muted);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.02);padding-bottom:4px}
+
+  footer{padding:28px 0;color:var(--muted);font-size:14px;text-align:center}
+
+  /* responsive */
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr;min-height:unset;padding-top:40px}
+    .about-grid,.contact-grid{grid-template-columns:1fr}
+    .grid-2{grid-template-columns:1fr}
+    nav{display:none}
+  }
+  @media (max-width:520px){
+    .wrap{padding:18px}
+    h1{font-size:28px}
+    .card{padding:16px}
+    .project-media{height:120px}
+  }
+
+  /* micro interactions */
+  a,button{transition:all .22s ease}
+  .fade-in{animation:fadeIn .9s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+  <!-- Fluid animated background canvas -->
+  <canvas id="fluid-bg" aria-hidden="true"></canvas>
+  <!-- Particle canvas -->
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header class="fade-in" role="banner">
+      <a class="brand" href="#">
+        <div class="mark">TV</div>
+        <div>
+          <div style="font-weight:800">Thiruvikraman V M</div>
+          <div style="font-size:12px;color:var(--muted)">Full Stack Developer</div>
+        </div>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a class="cta" href="#contact">Hire / Contact</a>
+    </header>
+
+    <!-- HERO -->
+    <main class="hero" role="main">
+      <div class="hero-left fade-in">
+        <div class="kicker"><span class="dot" aria-hidden="true"></span> Student • Developer • AI tinkerer</div>
+        <h1>
+          Hi, I'm <span class="accent">Thiruvikraman</span><br />
+          <span style="font-weight:600;color:var(--muted)">Full Stack Developer & Data Enthusiast</span>
+        </h1>
+        <p class="lead">
+          I build responsive web apps and data-driven tools using Python, JavaScript, and modern web stacks.
+          I enjoy turning data into insights and crafting polished user experiences with smooth interactions.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn" href="#projects">View Projects →</a>
+          <a class="ghost" href="#contact">Get in touch</a>
+        </div>
+
+        <div style="margin-top:22px;color:var(--muted);font-size:13px">
+          <strong>Core</strong>: Python; JavaScript; React; Node.js; MySQL; HTML & CSS
+        </div>
+      </div>
+
+      <aside class="card fade-in" aria-label="Profile card">
+        <div class="role">Full Stack Developer | Python & Data Analytics Enthusiast</div>
+        <div class="name">Thiruvikraman V M</div>
+
+        <div class="contact" style="margin-top:8px">
+          <div class="contact-row"><span style="color:var(--muted)">Email:</span> <a href="mailto:thirucbe2005@email.com">thirucbe2005@email.com</a></div>
+          <div class="contact-row"><span style="color:var(--muted)">Phone:</span> <a href="tel:+916381830344">+91 63818 30344</a></div>
+          <div class="contact-row"><span style="color:var(--muted)">Location:</span> Coimbatore, India</div>
+        </div>
+
+        <div style="margin-top:14px" class="skills-row">
+          <div class="chip">Python</div>
+          <div class="chip">React</div>
+          <div class="chip">Node.js</div>
+          <div class="chip">MySQL</div>
+          <div class="chip">HTML & CSS</div>
+        </div>
+
+        <div style="margin-top:14px;color:var(--muted);font-size:13px">
+          <div style="font-weight:800;margin-bottom:6px">Education</div>
+          <div>B.Tech Information Technology — United Institute of Technology (2023–2027)</div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- ABOUT -->
+    <section id="about" class="fade-in" aria-labelledby="about-title">
+      <div class="section-head">
+        <div class="num">01</div>
+        <div class="title" id="about-title">About</div>
+      </div>
+
+      <div class="about-grid">
+        <div>
+          <p>
+            Information Technology student with knowledge of full stack web development, Python, SQL, and modern web technologies.
+            I focus on building scalable web applications, data-driven dashboards, and experimenting with AI-assisted tools.
+          </p>
+
+          <p style="margin-top:12px;color:var(--muted)">
+            I enjoy end-to-end development: designing clean frontends, building robust backends, and shaping data into actionable insights.
+            Recent work includes an e-commerce platform, a sales analytics dashboard, and an AI-powered Japanese learning assistant.
+          </p>
+
+          <div class="stats" aria-hidden="true">
+            <div class="stat">
+              <div class="numbig">3+</div>
+              <div style="color:var(--muted);font-size:13px">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="numbig">Python</div>
+              <div style="color:var(--muted);font-size:13px">Primary language</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="card-plain">
+          <div style="font-weight:800;margin-bottom:8px">Currently</div>
+          <ul style="list-style:none;padding:0;margin:0;color:var(--muted);line-height:1.8">
+            <li>Building AI Japanese Learning Assistant</li>
+            <li>Developing Sales Analytics Dashboard (Python & SQL)</li>
+            <li>Exploring prompt engineering & Framer</li>
+          </ul>
+
+          <div style="margin-top:14px">
+            <div style="font-weight:800;margin-bottom:8px">Certifications</div>
+            <div style="color:var(--muted);font-size:14px">NPTEL — Computer Networks; NPTEL — Cyber Security; Infosys Springboard — IoT</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="fade-in" aria-labelledby="projects-title">
+      <div class="section-head">
+        <div class="num">02</div>
+        <div class="title" id="projects-title">Projects</div>
+      </div>
+
+      <div class="grid-2">
+        <article class="card-plain" data-tilt>
+          <div class="project-media">E-Commerce Web App</div>
+          <h3 style="margin:8px 0 6px">Full Stack E-Commerce</h3>
+          <p style="color:var(--muted);margin:0 0 12px">Built product listings, authentication, cart functionality, backend APIs and MySQL integration. Responsive frontend with HTML, CSS and JavaScript.</p>
+          <a class="link" href="#" aria-label="Open project">View details →</a>
+        </article>
+
+        <article class="card-plain" data-tilt>
+          <div class="project-media">Sales Analytics Dashboard</div>
+          <h3 style="margin:8px 0 6px">Sales Analytics Dashboard</h3>
+          <p style="color:var(--muted);margin:0 0 12px">Dashboard for sales trends and product performance using Python and SQL. Visualized insights with charts and summaries.</p>
+          <a class="link" href="#" aria-label="Open project">View details →</a>
+        </article>
+
+        <article class="card-plain" data-tilt>
+          <div class="project-media">AI Japanese Assistant</div>
+          <h3 style="margin:8px 0 6px">AI Japanese Learning Assistant</h3>
+          <p style="color:var(--muted);margin:0 0 12px">AI-powered web app for vocabulary practice, quizzes, and interactive learning modules with a simple responsive UI.</p>
+          <a class="link" href="#" aria-label="Open project">View details →</a>
+        </article>
+
+        <article class="card-plain" data-tilt>
+          <div class="project-media">Misc & Experiments</div>
+          <h3 style="margin:8px 0 6px">Tools & Experiments</h3>
+          <p style="color:var(--muted);margin:0 0 12px">Small utilities, prototypes, and experiments exploring prompt engineering, Framer, and UI polish.</p>
+          <a class="link" href="./static/staticwebsite.html" aria-label="Open project">View details →</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="timeline" class="fade-in" aria-labelledby="timeline-title">
+      <div class="section-head">
+        <div class="num">03</div>
+        <div class="title" id="timeline-title">Timeline</div>
+      </div>
+
+      <div class="timeline">
+        <div class="event">
+          <div class="dot" aria-hidden="true"></div>
+          <div style="font-weight:800">2023 — Present</div>
+          <div style="color:var(--muted)">B.Tech Information Technology — United Institute of Technology, Coimbatore</div>
+        </div>
+
+        <div class="event">
+          <div class="dot" aria-hidden="true"></div>
+          <div style="font-weight:800">2021 — 2023</div>
+          <div style="color:var(--muted)">HSC Computer Science — Thambu Higher Secondary School</div>
+        </div>
+
+        <div class="event">
+          <div class="dot" aria-hidden="true"></div>
+          <div style="font-weight:800">Ongoing</div>
+          <div style="color:var(--muted)">Working on AI learning assistant and sales analytics projects; learning advanced prompt engineering.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section aria-hidden="true">
+      <div class="marquee" role="presentation">
+        <div class="marquee-track" aria-hidden="true">
+          <span>Open Source</span>
+          <span class="sep">•</span>
+          <span>Personal Projects</span>
+          <span class="sep">•</span>
+          <span>Academic Work</span>
+          <span class="sep">•</span>
+          <span>Hackathon Demos</span>
+          <span class="sep">•</span>
+          <span>Open Source</span>
+          <span class="sep">•</span>
+          <span>Personal Projects</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="fade-in" aria-labelledby="contact-title">
+      <div class="section-head">
+        <div class="num">04</div>
+        <div class="title" id="contact-title">Contact</div>
+      </div>
+
+      <div class="contact-grid">
+        <div>
+          <div class="contact-title" style="font-size:28px;font-weight:800">Let's build something together</div>
+          <p class="contact-sub" style="color:var(--muted);max-width:60ch">
+            I'm available for internships, freelance projects, and collaborations. I enjoy building full-stack apps and data tools.
+            Reach out and let's talk about your idea.
+          </p>
+
+          <div style="margin-top:18px">
+            <a class="email-large" href="mailto:thirucbe2005@email.com">thirucbe2005@email.com</a>
+            <div class="links">
+              <a class="link" href="https://linkedin.com/in/thiruvikraman-v-m" target="_blank" rel="noopener">LinkedIn</a>
+              <a class="link" href="https://github.com/VIK-3011" target="_blank" rel="noopener">GitHub</a>
+              <a class="link" href="#" target="_blank" rel="noopener">Resume (PDF)</a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="card-plain" style="align-self:start">
+          <div style="font-weight:800;margin-bottom:8px">Quick facts</div>
+          <div style="color:var(--muted);font-size:14px;line-height:1.6">
+            <div><strong>Languages:</strong> English, Tamil, Japanese (basic)</div>
+            <div style="margin-top:8px"><strong>Tools:</strong> Git, Postman, Vercel, Framer</div>
+            <div style="margin-top:8px"><strong>Interests:</strong> AI, Data Analytics, Web Performance</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <footer class="fade-in" role="contentinfo">
+      <div style="max-width:var(--maxw);margin:0 auto;padding:18px 0;color:var(--muted)">
+        © <span id="year"></span> Thiruvikraman V M — Built with HTML & CSS • Smooth animations & fluid background
+      </div>
+    </footer>
+  </div>
+
+<script>
+/* Small helper: current year */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- Fluid background (simple GPU-friendly metaball-like gradient) ---------- */
+(function(){
+  const canvas = document.getElementById('fluid-bg');
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = innerWidth;
+  let h = canvas.height = innerHeight;
+  const blobs = [
+    {x: w*0.15, y: h*0.2, r: 260, vx:0.02, vy:0.01, color: [185,28,28]},
+    {x: w*0.85, y: h*0.6, r: 220, vx:-0.015, vy:0.01, color: [13,24,49]},
+    {x: w*0.35, y: h*0.8, r: 180, vx:0.01, vy:-0.02, color: [11,27,58]}
+  ];
+
+  function resize(){ w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+  addEventListener('resize', resize);
+
+  // mouse influence
+  const mouse = {x: w/2, y: h/2};
+  addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    // create an offscreen gradient by drawing blurred circles
+    ctx.globalCompositeOperation = 'lighter';
+    blobs.forEach((b,i)=>{
+      // gentle movement
+      b.x += b.vx * (1 + Math.sin(Date.now()/3000 + i));
+      b.y += b.vy * (1 + Math.cos(Date.now()/2500 + i));
+      // mouse attraction
+      const dx = (mouse.x - b.x) * 0.002;
+      const dy = (mouse.y - b.y) * 0.002;
+      b.x += dx * (i+1);
+      b.y += dy * (i+1);
+
+      const grd = ctx.createRadialGradient(b.x, b.y, b.r*0.15, b.x, b.y, b.r);
+      const c = b.color;
+      grd.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},0.28)`);
+      grd.addColorStop(0.35, `rgba(${c[0]},${c[1]},${c[2]},0.12)`);
+      grd.addColorStop(1, `rgba(${c[0]},${c[1]},${c[2]},0)`);
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+    ctx.globalCompositeOperation = 'source-over';
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ---------- Particles (floating dots that react to mouse) ---------- */
+(function(){
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = innerWidth;
+  let h = canvas.height = innerHeight;
+  const particles = [];
+  const count = Math.round((w*h)/90000); // density scales with screen
+  for(let i=0;i<count;i++){
+    particles.push({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      vx: (Math.random()-0.5)*0.2,
+      vy: (Math.random()-0.5)*0.2,
+      r: 1 + Math.random()*2,
+      hue: 200 + Math.random()*120
+    });
+  }
+  const mouse = {x: w/2, y: h/2, down:false};
+  addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  addEventListener('resize', ()=>{ w = canvas.width = innerWidth; h = canvas.height = innerHeight; });
+
+  function step(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      // attraction to mouse
+      const dx = mouse.x - p.x;
+      const dy = mouse.y - p.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 160){
+        const force = (1 - dist/160) * 0.6;
+        p.vx += (dx/dist) * force * 0.02;
+        p.vy += (dy/dist) * force * 0.02;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      // wrap
+      if(p.x < -10) p.x = w+10;
+      if(p.x > w+10) p.x = -10;
+      if(p.y < -10) p.y = h+10;
+      if(p.y > h+10) p.y = -10;
+      // draw
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255,255,255,0.06)`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+
+/* ---------- Parallax & tilt interactions for cards ---------- */
+(function(){
+  const cards = document.querySelectorAll('[data-tilt], .card, .card-plain');
+  function applyTilt(e, el){
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const rx = (py - 0.5) * 10; // rotateX
+    const ry = (px - 0.5) * -10; // rotateY
+    el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+    el.style.boxShadow = `${(ry*2)}px ${(-rx*2)}px 40px rgba(2,6,23,0.45)`;
+  }
+  function resetTilt(el){
+    el.style.transform = '';
+    el.style.boxShadow = '';
+  }
+  cards.forEach(el=>{
+    el.addEventListener('mousemove', e => applyTilt(e, el));
+    el.addEventListener('mouseleave', ()=> resetTilt(el));
+    el.addEventListener('mouseenter', ()=> el.style.transition = 'transform .12s ease, box-shadow .12s ease');
+  });
+})();
+
+/* ---------- Fluid background subtle follow (CSS variable) ---------- */
+(function(){
+  // Move a subtle overlay gradient with mouse for extra parallax
+  const root = document.documentElement;
+  window.addEventListener('mousemove', e => {
+    const x = (e.clientX / innerWidth) * 100;
+    const y = (e.clientY / innerHeight) * 100;
+    // set CSS variables for potential use (not strictly necessary but useful)
+    root.style.setProperty('--mx', x.toFixed(2) + '%');
+    root.style.setProperty('--my', y.toFixed(2) + '%');
+  }, {passive:true});
+})();
+
+/* ---------- Smooth scroll for internal links ---------- */
+(function(){
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const target = document.querySelector(a.getAttribute('href'));
+      if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
